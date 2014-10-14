@@ -1,0 +1,83 @@
+---
+title       : Australian Airport Passenger-traffic Analysis (AAA)
+subtitle    : Interactive analysis of AAA
+author      : just_np
+job         : BI Consultant
+framework   : io2012          # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js    # {highlight.js, prettify, highlight}
+hitheme     : tomorrow       # tomorrow solarized_light
+widgets     : [polycharts, bootstrap, shiny, interactive]
+mode        : selfcontained # {selfcontained or standalone, draft}
+ext_widgets : {rCharts: [libraries/nvd3]}
+knit        : slidify::knit2slides
+---
+
+
+### Australian Airport Passenger-traffic Analysis (AAA)
+
+Australian Airport Passenger-traffic Analysis (AAA) app provides a interactive analysis of domestic and international passenger movements across all states and cities of Australia.
+
+The raw data for this analysis is downloaded from Bureau of Infrastructure, Transport and Regional Economics (BITRE) http://www.bitre.gov.au
+
+The data used in AAA is spanned from year 1985 to 2013
+
+In the following slides you can interactively analyse the Australian Airport Traffic dataset
+
+---
+
+```{r, echo = FALSE, cache = FALSE}
+# Read airtraffic data
+auAirTrafficRaw <- read.csv("auAirTraffic_V2.csv")
+
+# Remove the records without blank Ranks
+auAirTraffic <- subset(auAirTrafficRaw, RANK != '-')
+library(knitr)
+library(rCharts)
+library(slidify)
+
+```
+## Interactive Airport Passenger Movements Analysis's by Airport type
+
+```{r opts.label = 'shiny', cache = F}
+
+slidifyUI(
+  sidebarPanel(selectInput(inputId = "stktrafficType",
+                label = "Select Airport Type",
+                choices = c("Domestic", "International"),
+                selected = "International"),
+               selectInput(inputId = "stkyear",
+                label = "Select year to compare States",
+                choices = sort(unique(auAirTraffic$YEAR)),
+                selected = 2013),
+               selectInput(inputId = "type",
+                label = "Choose Chart Type",
+                choices = c("multiBarChart", "multiBarHorizontalChart"),
+                selected = "multiBarChart")                                                   
+       ),
+  mainPanel(tags$div(id = 'stkChart', class='shiny-html-output nvd3 rChart'))  
+)
+```
+
+---
+
+## Interactive Airport Passenger Movements Analysis's by Cities
+
+```{r opts.label = 'shiny', cache = F}
+
+slidifyUI(
+  sidebarPanel(selectInput(inputId = "scttrafficType",
+                label = "Select Airport Type",
+                choices = c("Domestic", "International"),
+                selected = "Domestic"),
+               selectInput(inputId = "sctstate",
+                label = "Select a state to compare year",
+                choices = c("ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"),
+                selected = "NT"),
+               selectInput(inputId = "type",
+                label = "Choose Chart Type",
+                choices = c("multiBarChart", "multiBarHorizontalChart"),
+                selected = "multiBarChart")                                                   
+       ),
+  mainPanel(tags$div(id = 'sctChart', class='shiny-html-output nvd3 rChart'))  
+)
+```
