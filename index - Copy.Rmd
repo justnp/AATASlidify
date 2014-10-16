@@ -50,6 +50,22 @@ stkPlot$print('stkchart')
 
 ---
 
+## Interactive Domestic Airport Passengers Movements Analysis's for state Northern Territory (NT)
+
+```{r echo = F, results = 'asis'}
+auAirports <- subset(auAirTraffic, TRAFFICTYPE == 'Domestic' & STATECODE == 'NT', AIRTRAFFIC_TOTAL > 0,)
+sccplot <- nPlot(AIRTRAFFIC_TOTAL ~ YEAR, group = 'AIRPORT', data = auAirports, 
+                         type='scatterChart', dom = 'sctChart', width = 600)
+sccplot$yAxis(axisLabel = "NT - Domestic Passenger Movements (millions)", tickFormat = "#! function(d) {return '' + d} !#")
+sccplot$xAxis( axisLabel = "Year")
+sccplot$chart(size = '#! function(d){return d.AIRTRAFFIC_TOTAL} !#')
+sccplot$yAxis(tickFormat = "#! function(d) {return '' + d3.format(',.')(d)} !#")
+sccplot$chart(margin = list(right = 100))
+sccplot$print('sctChart')
+```
+
+---
+
 ## Interactive Domestic Passengers Movements Analysis's by year
 
 ```{r echo = F, results = 'asis'}
